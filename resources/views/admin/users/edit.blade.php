@@ -50,7 +50,7 @@
             <div class="row">
                 <div class="col-xs-12 form-group">
                     {!! Form::label('roles', 'Roles*', ['class' => 'control-label']) !!}
-                    {!! Form::select('roles[]', $roles, old('roles') ? old('role') : $user->roles()->pluck('name', 'name'), ['class' => 'form-control select2', 'multiple' => 'multiple', 'required' => '']) !!}
+                    {!! Form::select('roles[]', $roles, old('roles') ? old('roles') : $user->roles()->pluck('name', 'name'), ['class' => 'form-control select2', 'multiple' => 'multiple', 'required' => '']) !!}
                     <p class="help-block"></p>
                     @if($errors->has('roles'))
                         <p class="help-block">
