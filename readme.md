@@ -6,7 +6,7 @@ We've also created almost identical project based on Joseph Silber's Bouncer pac
 
 Part of this project was generated automatically by [QuickAdminPanel system](https://quickadminpanel.com/).
 
-![Larancer screenshot](http://webcoderpro.com/roles-permissions-manager-spatie.png)
+![Roles Permissions screenshot](https://laraveldaily.com/wp-content/uploads/2018/11/roles-permissions-manager-spatie.png)
 
 ## Usage
 
