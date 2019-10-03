@@ -68,14 +68,12 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Role $role)
     {
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
         $permissions = Permission::get()->pluck('name', 'name');
-
-        $role = Role::findOrFail($id);
 
         return view('admin.roles.edit', compact('role', 'permissions'));
     }
@@ -87,17 +85,28 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateRolesRequest $request, $id)
+    public function update(UpdateRolesRequest $request, Role $role)
     {
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
-        $role = Role::findOrFail($id);
+
         $role->update($request->except('permission'));
         $permissions = $request->input('permission') ? $request->input('permission') : [];
         $role->syncPermissions($permissions);
 
         return redirect()->route('admin.roles.index');
+    }
+
+    public function show(Role $role)
+    {
+        if (! Gate::allows('users_manage')) {
+            return abort(401);
+        }
+
+        $role->load('permissions');
+
+        return view('admin.roles.show', compact('role'));
     }
 
 
@@ -107,12 +116,12 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Role $role)
     {
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
-        $role = Role::findOrFail($id);
+
         $role->delete();
 
         return redirect()->route('admin.roles.index');
@@ -125,16 +134,9 @@ class RolesController extends Controller
      */
     public function massDestroy(Request $request)
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
-        }
-        if ($request->input('ids')) {
-            $entries = Role::whereIn('id', $request->input('ids'))->get();
+        Role::whereIn('id', request('ids'))->delete();
 
-            foreach ($entries as $entry) {
-                $entry->delete();
-            }
-        }
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
 }

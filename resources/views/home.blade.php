@@ -1,15 +1,15 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
+<div class="content">
     <div class="row">
-        <div class="col-md-10">
-            <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
-
-                <div class="panel-body">
-                    You are logged in!
-                </div>
-            </div>
+        <div class="col-lg-12">
+            Home
         </div>
     </div>
+</div>
+@endsection
+@section('scripts')
+@parent
+
 @endsection

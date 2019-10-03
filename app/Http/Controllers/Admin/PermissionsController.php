@@ -63,12 +63,11 @@ class PermissionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Permission $permission)
     {
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
-        $permission = Permission::findOrFail($id);
 
         return view('admin.permissions.edit', compact('permission'));
     }
@@ -80,12 +79,12 @@ class PermissionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePermissionsRequest $request, $id)
+    public function update(UpdatePermissionsRequest $request, Permission $permission)
     {
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
-        $permission = Permission::findOrFail($id);
+
         $permission->update($request->all());
 
         return redirect()->route('admin.permissions.index');
@@ -98,15 +97,24 @@ class PermissionsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Permission $permission)
     {
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
-        $permission = Permission::findOrFail($id);
+
         $permission->delete();
 
         return redirect()->route('admin.permissions.index');
+    }
+
+    public function show(Permission $permission)
+    {
+        if (! Gate::allows('users_manage')) {
+            return abort(401);
+        }
+
+        return view('admin.permissions.show', compact('permission'));
     }
 
     /**
@@ -116,16 +124,9 @@ class PermissionsController extends Controller
      */
     public function massDestroy(Request $request)
     {
-        if (! Gate::allows('users_manage')) {
-            return abort(401);
-        }
-        if ($request->input('ids')) {
-            $entries = Permission::whereIn('id', $request->input('ids'))->get();
+        Permission::whereIn('id', request('ids'))->delete();
 
-            foreach ($entries as $entry) {
-                $entry->delete();
-            }
-        }
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
 }

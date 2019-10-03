@@ -68,14 +68,12 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
         $roles = Role::get()->pluck('name', 'name');
-
-        $user = User::findOrFail($id);
 
         return view('admin.users.edit', compact('user', 'roles'));
     }
@@ -87,17 +85,28 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateUsersRequest $request, $id)
+    public function update(UpdateUsersRequest $request, User $user)
     {
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
-        $user = User::findOrFail($id);
+
         $user->update($request->all());
         $roles = $request->input('roles') ? $request->input('roles') : [];
         $user->syncRoles($roles);
 
         return redirect()->route('admin.users.index');
+    }
+
+    public function show(User $user)
+    {
+        if (! Gate::allows('users_manage')) {
+            return abort(401);
+        }
+
+        $user->load('roles');
+
+        return view('admin.users.show', compact('user'));
     }
 
     /**
@@ -106,12 +115,12 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
-        $user = User::findOrFail($id);
+
         $user->delete();
 
         return redirect()->route('admin.users.index');
@@ -127,13 +136,9 @@ class UsersController extends Controller
         if (! Gate::allows('users_manage')) {
             return abort(401);
         }
-        if ($request->input('ids')) {
-            $entries = User::whereIn('id', $request->input('ids'))->get();
+        User::whereIn('id', request('ids'))->delete();
 
-            foreach ($entries as $entry) {
-                $entry->delete();
-            }
-        }
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
 }
