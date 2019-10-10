@@ -1,32 +1,32 @@
-@extends('layouts.app')
-
+@extends('layouts.admin')
 @section('content')
-    <h3 class="page-title">@lang('global.permissions.title')</h3>
-    {!! Form::open(['method' => 'POST', 'route' => ['admin.permissions.store']]) !!}
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            @lang('global.app_create')
-        </div>
-        
-        <div class="panel-body">
-            <div class="row">
-                <div class="col-xs-12 form-group">
-                    {!! Form::label('name', 'Name*', ['class' => 'control-label']) !!}
-                    {!! Form::text('name', old('name'), ['class' => 'form-control', 'placeholder' => '', 'required' => '']) !!}
-                    <p class="help-block"></p>
-                    @if($errors->has('name'))
-                        <p class="help-block">
-                            {{ $errors->first('name') }}
-                        </p>
-                    @endif
-                </div>
-            </div>
-            
-        </div>
+<div class="card">
+    <div class="card-header">
+        {{ trans('global.create') }} {{ trans('cruds.permission.title_singular') }}
     </div>
 
-    {!! Form::submit(trans('global.app_save'), ['class' => 'btn btn-danger']) !!}
-    {!! Form::close() !!}
-@stop
+    <div class="card-body">
+        <form action="{{ route("admin.permissions.store") }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
+                <label for="name">{{ trans('cruds.permission.fields.title') }}*</label>
+                <input type="text" id="name" name="name" class="form-control" value="{{ old('name', isset($permission) ? $permission->name : '') }}" required>
+                @if($errors->has('name'))
+                    <em class="invalid-feedback">
+                        {{ $errors->first('name') }}
+                    </em>
+                @endif
+                <p class="helper-block">
+                    {{ trans('cruds.permission.fields.title_helper') }}
+                </p>
+            </div>
+            <div>
+                <input class="btn btn-danger" type="submit" value="{{ trans('global.save') }}">
+            </div>
+        </form>
 
+
+    </div>
+</div>
+@endsection

@@ -24,7 +24,7 @@ class UpdateUsersRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$this->route('user'),
+            'email' => 'required|email|unique:users,email,'.auth()->user()->id,
             'roles' => 'required',
         ];
     }

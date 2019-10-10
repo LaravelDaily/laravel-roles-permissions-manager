@@ -1,69 +1,51 @@
-@extends('layouts.auth')
-
+@extends('layouts.app')
 @section('content')
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Reset password</div>
-                <div class="panel-body">
-                    @if (count($errors) > 0)
-                        <div class="alert alert-danger">
-                            <strong>Whoops!</strong> There were problems with input:
-                            <br><br>
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
-                    <form class="form-horizontal"
-                          role="form"
-                          method="POST"
-                          action="{{ url('password/reset') }}">
-                        <input type="hidden"
-                               name="_token"
-                               value="{{ csrf_token() }}">
-                        <input type="hidden" name="token" value="{{ $token }}">
-
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Email</label>
-
-                            <div class="col-md-6">
-                                <input type="email"
-                                       class="form-control"
-                                       name="email"
-                                       value="{{ old('email') }}">
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card-group">
+            <div class="card p-4">
+                <div class="card-body">
+                    <form method="POST" action="{{ route('password.request') }}">
+                        {{ csrf_field() }}
+                        <h1>
+                            <div class="login-logo">
+                                <a href="#">
+                                    {{ env('APP_NAME', 'Permissions Manager') }}
+                                </a>
+                            </div>
+                        </h1>
+                        <p class="text-muted"></p>
+                        <div>
+                            <input name="token" value="{{ $token }}" type="hidden">
+                            <div class="form-group has-feedback">
+                                <input type="email" name="email" class="form-control" required placeholder="Email">
+                                @if($errors->has('email'))
+                                    <em class="invalid-feedback">
+                                        {{ $errors->first('email') }}
+                                    </em>
+                                @endif
+                            </div>
+                            <div class="form-group has-feedback">
+                                <input type="password" name="password" class="form-control" required placeholder="Password">
+                                @if($errors->has('password'))
+                                    <em class="invalid-feedback">
+                                        {{ $errors->first('password') }}
+                                    </em>
+                                @endif
+                            </div>
+                            <div class="form-group has-feedback">
+                                <input type="password" name="password_confirmation" class="form-control" required placeholder="Password confirmation">
+                                @if($errors->has('password_confirmation'))
+                                    <em class="invalid-feedback">
+                                        {{ $errors->first('password_confirmation') }}
+                                    </em>
+                                @endif
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input type="password"
-                                       class="form-control"
-                                       name="password">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Confirm password</label>
-
-                            <div class="col-md-6">
-                                <input type="password"
-                                       class="form-control"
-                                       name="password_confirmation">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit"
-                                        class="btn btn-primary"
-                                        style="margin-right: 15px;">
-                                    Reset password
+                        <div class="row">
+                            <div class="col-12 text-right">
+                                <button type="submit" class="btn btn-primary btn-block btn-flat">
+                                    Reset Password
                                 </button>
                             </div>
                         </div>
@@ -72,4 +54,5 @@
             </div>
         </div>
     </div>
+</div>
 @endsection
