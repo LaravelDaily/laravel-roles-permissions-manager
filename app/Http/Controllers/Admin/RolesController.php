@@ -136,7 +136,7 @@ class RolesController extends Controller
     {
         Role::whereIn('id', request('ids'))->delete();
 
-        return response(null, Response::HTTP_NO_CONTENT);
+        return response()->noContent();
     }
 
 }
