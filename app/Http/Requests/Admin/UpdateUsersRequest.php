@@ -2,6 +2,7 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Route;
 
 class UpdateUsersRequest extends FormRequest
 {
@@ -24,7 +25,7 @@ class UpdateUsersRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.auth()->user()->id,
+            'email' => 'required|email|unique:users,email,'.$this->route('user')->id,
             'roles' => 'required',
         ];
     }
